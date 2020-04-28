@@ -1014,7 +1014,9 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
 
         static const char *afunc_prev;
 
+    extern "C" {
         EMSCRIPTEN_KEEPALIVE void afunc(const char *s);
+        }
         void afunc(const char *s) {
           printf("a: %s (prev: %s)\n", s, afunc_prev);
           afunc_prev = s;
@@ -1032,9 +1034,11 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
     create_test_file('libb.cpp', r'''
         #include <emscripten.h>
 
+    extern "C" {
         void afunc(const char *s);
         EMSCRIPTEN_KEEPALIVE void bfunc();
-        void bfunc() {
+        }
+        void bfunc(void) {
           afunc("b");
         }
       ''')
@@ -1042,8 +1046,10 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
     create_test_file('libc.cpp', r'''
         #include <emscripten.h>
 
+    extern "C" {
         void afunc(const char *s);
-        EMSCRIPTEN_KEEPALIVE void cfunc();
+        EMSCRIPTEN_KEEPALIVE void cfunc(void);
+        }
         void cfunc() {
           afunc("c");
         }
@@ -1072,8 +1078,8 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
     self.set_setting('MAIN_MODULE', 1)
     self.set_setting('RUNTIME_LINKED_LIBS', ['libb' + so, 'libc' + so])
     do_run(r'''
-      void bfunc();
-      void cfunc();
+      void bfunc(void);
+      void cfunc(void);
 
       int _main() {
         bfunc();
@@ -1100,9 +1106,9 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
         cdso = dlopen("libc%(so)s", RTLD_GLOBAL);
         assert(cdso != NULL);
 
-        bfunc = (void (*)())dlsym(bdso, "_Z5bfuncv");
+        bfunc = (void (*)())dlsym(bdso, "bfunc");
         assert(bfunc != NULL);
-        cfunc = (void (*)())dlsym(cdso, "_Z5cfuncv");
+        cfunc = (void (*)())dlsym(cdso, "cfunc");
         assert(cfunc != NULL);
 
         bfunc();
@@ -1111,6 +1117,7 @@ class RunnerCore(RunnerMeta('TestCase', (unittest.TestCase,), {})):
       }
     ''' % locals(),
            'a: loaded\na: b (prev: (null))\na: c (prev: b)\n')
+    return
 
   def filtered_js_engines(self, js_engines=None):
     if js_engines is None:
