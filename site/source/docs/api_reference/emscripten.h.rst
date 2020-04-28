@@ -1252,7 +1252,7 @@ Typedefs
 Pseudo-synchronous functions
 ============================
 
-These functions require Asyncify (``-s ASYNCIFY=1``). These functions are asynchronous but appear synchronous in C. See `Asyncify <https://emscripten.org/docs/porting/asyncify.html>`_ and `Emterpreter <https://emscripten.org/docs/porting/emterpreter.html>`_ for more details.
+These functions require Asyncify (``-s ASYNCIFY=1``). These functions are asynchronous but appear synchronous in C. See `Asyncify <https://emscripten.org/docs/porting/asyncify.html>`_ for more details.
 
 Sleeping
 --------
