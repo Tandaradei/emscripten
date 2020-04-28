@@ -29,6 +29,9 @@ Current Trunk
 - Remove undocumented and untesting config settings: `COMPILER_OPTS`.  This was
   a global setting in the emscripten config file that would inject extra
   compiler options.
+- Remove emterpreter and ``EMTERPRETIFY`` settings.  Emterpreter has largerly
+  been replaces by asyncify and is fastcomp only so due for removing in
+  the near future anyway.
 
 v1.39.13: 04/17/2020
 --------------------
