@@ -7826,16 +7826,6 @@ Module['onRuntimeInitialized'] = function() {
     self.set_setting('ASYNCIFY', 1)
     self.do_run_in_out_file_test('tests', 'core', 'test_hello_world')
 
-<<<<<<< HEAD
-  @no_wasm_backend('EMTERPRETIFY causes JSOptimizer to run, which is '
-                   'unsupported with Wasm backend')
-  def test_coroutine_emterpretify_async(self):
-    self.emcc_args.append('-Wno-emterpreter')
-    # The same EMTERPRETIFY_WHITELIST should be in other.test_emterpreter_advise
-    self.do_test_coroutine({'EMTERPRETIFY': 1, 'EMTERPRETIFY_ASYNC': 1, 'EMTERPRETIFY_WHITELIST': ['_fib', '_f', '_g'], 'ASSERTIONS': 1})
-
-=======
->>>>>>> 02339ca62... Remove emterpreter support.
   @parameterized({
     'normal': ([], True),
     'blacklist_a': (['-s', 'ASYNCIFY_BLACKLIST=["foo(int, double)"]'], False),
@@ -7864,21 +7854,6 @@ Module['onRuntimeInitialized'] = function() {
       if should_pass:
         raise
 
-<<<<<<< HEAD
-  # Test basic emterpreter functionality in all core compilation modes.
-  @no_emterpreter
-  @no_wasm_backend('EMTERPRETIFY causes JSOptimizer to run, which is '
-                   'unsupported with Wasm backend')
-  def test_emterpretify(self):
-    self.emcc_args.append('-Wno-emterpreter')
-    self.set_setting('EMTERPRETIFY', 1)
-    self.do_run_in_out_file_test('tests', 'core', 'test_hello_world')
-    print('async')
-    self.set_setting('EMTERPRETIFY_ASYNC', 1)
-    self.do_run_in_out_file_test('tests', 'core', 'test_hello_world')
-
-=======
->>>>>>> 02339ca62... Remove emterpreter support.
   @no_fastcomp('wasm-backend specific feature')
   def test_emscripten_scan_registers(self):
     self.set_setting('ASYNCIFY', 1)
@@ -8733,13 +8708,6 @@ wasm2s = make_run('wasm2s', emcc_args=['-O2'], settings={'SAFE_HEAP': 1})
 wasm2ss = make_run('wasm2ss', emcc_args=['-O2'], settings={'STACK_OVERFLOW_CHECK': 2})
 strict = make_run('strict', emcc_args=['-O2'], settings={'DEFAULT_TO_CXX': 0})
 
-<<<<<<< HEAD
-if not shared.Settings.WASM_BACKEND:
-  # emterpreter
-  asm2i = make_run('asm2i', emcc_args=['-O2', '-Wno-emterpreter'], settings={'EMTERPRETIFY': 1, 'WASM': 0})
-
-=======
->>>>>>> 02339ca62... Remove emterpreter support.
 if shared.Settings.WASM_BACKEND:
   lsan = make_run('lsan', emcc_args=['-fsanitize=leak'], settings={'ALLOW_MEMORY_GROWTH': 1})
   asan = make_run('asan', emcc_args=['-fsanitize=address'], settings={'ALLOW_MEMORY_GROWTH': 1, 'ASAN_SHADOW_SIZE': 128 * 1024 * 1024})
