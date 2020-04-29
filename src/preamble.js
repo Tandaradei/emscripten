@@ -514,6 +514,15 @@ function initRuntime() {
   assert(!runtimeInitialized);
 #endif
   runtimeInitialized = true;
+#if WASM_BACKEND
+#if STACK_OVERFLOW_CHECK >= 2
+  Module['___set_stack_limit'](STACK_MAX);
+#endif
+  // Emscripten adds static data during JS compilation (see makeStaticAlloc).
+  // This effects the stack layout which means before we run any code we need
+  // to set stack pointer on the wasm side.
+  Module['stackRestore'](STACKTOP);
+#endif
   {{{ getQuoted('ATINITS') }}}
   callRuntimeCallbacks(__ATINIT__);
 }
