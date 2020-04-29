@@ -8301,7 +8301,7 @@ int main() {
          meminit1_enabled,
          debug_enabled,
          closure_enabled,
-         wasm_enabled) in itertools.product([True, False], repeat=7):
+         wasm_enabled) in itertools.product([True, False], repeat=5):
       # skip unhelpful option combinations
       if wasm_enabled and meminit1_enabled:
         continue
@@ -8310,9 +8310,7 @@ int main() {
 
       expect_wasm = wasm_enabled
       expect_meminit = meminit1_enabled and not wasm_enabled
-      expect_success = not single_file_enabled
       expect_wat = debug_enabled and wasm_enabled and not self.is_wasm_backend()
-      should_run_js = expect_success
 
       cmd = [PYTHON, EMCC, path_from_root('tests', 'hello_world.c')]
 
@@ -8330,9 +8328,6 @@ int main() {
         cmd += ['-s', 'WASM=0']
 
       self.clear()
-      if not expect_success:
-        self.expect_fail(cmd)
-        continue
 
       def do_test(cmd):
         print(' '.join(cmd))
@@ -8341,8 +8336,7 @@ int main() {
         assert expect_meminit == (os.path.exists('a.out.mem') or os.path.exists('a.out.js.mem'))
         assert expect_wasm == os.path.exists('a.out.wasm')
         assert expect_wat == os.path.exists('a.out.wat')
-        if should_run_js:
-          self.assertContained('hello, world!', run_js('a.out.js'))
+        self.assertContained('hello, world!', run_js('a.out.js'))
 
       do_test(cmd)
 

@@ -1598,6 +1598,14 @@ def create_basic_funcs(function_table_sigs, invoke_function_names):
   basic_funcs = shared.Settings.RUNTIME_FUNCS_TO_IMPORT
   if shared.Settings.STACK_OVERFLOW_CHECK and not shared.Settings.MINIMAL_RUNTIME:
     basic_funcs += ['abortStackOverflow']
+  if shared.Settings.SAFE_HEAP:
+    if asm_safe_heap():
+      basic_funcs += ['segfault', 'alignfault', 'ftfault']
+    else:
+      # Binaryen generates calls to these two so they are always needed with wasm
+      if shared.Settings.WASM:
+        basic_funcs += ['segfault', 'alignfault']
+      basic_funcs += ['SAFE_HEAP_LOAD', 'SAFE_HEAP_LOAD_D', 'SAFE_HEAP_STORE', 'SAFE_HEAP_STORE_D', 'SAFE_FT_MASK']
 
   if shared.Settings.ASSERTIONS:
     for sig in function_table_sigs:
